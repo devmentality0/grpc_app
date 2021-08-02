@@ -1,0 +1,8 @@
+FROM envoyproxy/envoy-dev:latest
+
+RUN mkdir -p /etc/envoy
+COPY ./envoy_router.yaml /etc/envoy/envoy.yaml
+RUN  chmod go+r -R /etc/envoy \
+     && chmod go+rx /etc/envoy
+
+CMD ["/usr/local/bin/envoy","-c","/etc/envoy/envoy.yaml","--service-cluster","envoy","--service-node","envoy","--log-level","debug"]

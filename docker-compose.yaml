@@ -1,0 +1,58 @@
+version: '3.8'
+services:
+  envoy_router:
+    build:
+      context: ./envoy
+      dockerfile: Dockerfile_router
+    container_name: envoy_router
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+    depends_on:
+      - envoy_api
+      - envoy_static
+    networks:
+      - envoymesh
+
+  envoy_api:
+    build:
+      context: ./envoy
+      dockerfile: Dockerfile_api
+    container_name: envoy_api
+    restart: unless-stopped
+    depends_on:
+      - grpc_backend
+    networks:
+      - envoymesh
+
+  envoy_static:
+    build:
+      context: ./envoy
+      dockerfile: Dockerfile_static
+    container_name: envoy_static
+    restart: unless-stopped
+    depends_on:
+      - static_site
+    networks:
+      - envoymesh
+
+  grpc_backend:
+    build:
+      context: ./grpc-backend
+      dockerfile: Dockerfile
+    container_name: grpc_backend
+    restart: unless-stopped
+    networks:
+      - envoymesh
+
+  static_site:
+    build:
+      context: ./static-site
+      dockerfile: Dockerfile
+    container_name: static_site
+    restart: unless-stopped
+    networks:
+      - envoymesh
+
+networks:
+  envoymesh: {}
