@@ -29,7 +29,7 @@ static_resources:
               - match:
                   prefix: /
                 route:
-                  cluster: envoy_static
+                  cluster: grpc-app-oauth2-proxy
           http_filters:
           - name: envoy.filters.http.router
 
@@ -48,16 +48,16 @@ static_resources:
                 address: envoy_api
                 port_value: 8090
 
-  - name: envoy_static
+  - name: grpc-app-oauth2-proxy
     connect_timeout: 0.250s
     type: STRICT_DNS
     lb_policy: ROUND_ROBIN
     load_assignment:
-      cluster_name: envoy_static
+      cluster_name: grpc-app-oauth2-proxy
       endpoints:
       - lb_endpoints:
         - endpoint:
             address:
               socket_address:
-                address: envoy_static
+                address: grpc-app-oauth2-proxy
                 port_value: 8100

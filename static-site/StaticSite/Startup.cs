@@ -25,6 +25,8 @@ namespace StaticSite
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseMiddleware<LoggingMiddleware>();
             
             app.UseDefaultFiles();
             app.UseStaticFiles();

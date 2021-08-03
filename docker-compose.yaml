@@ -10,7 +10,7 @@ services:
       - 8080:8080
     depends_on:
       - envoy_api
-      - envoy_static
+      - grpc-app-oauth2-proxy
     networks:
       - envoymesh
 
@@ -25,14 +25,61 @@ services:
     networks:
       - envoymesh
 
-  envoy_static:
-    build:
-      context: ./envoy
-      dockerfile: Dockerfile_static
-    container_name: envoy_static
-    restart: unless-stopped
+  grpc-app-oauth2-proxy:
+    container_name: grpc-app-oauth2-proxy
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.0.0
     depends_on:
       - static_site
+    restart: unless-stopped
+    entrypoint:
+      - /bin/oauth2-proxy
+    command:
+#      - --provider=oidc
+#      - --skip-provider-button=true
+#      - --provider-display-name=Auth0
+#      - --email-domain=*
+#      - --insecure-oidc-allow-unverified-email=true
+#      - --client-id=5QU5IyVIfu02VNw1h5UjJJ7YjIhA86BI
+#      - --client-secret=iGivLmd8_PTyYfQsLxxaHJhvFV4Cyurrl_EibztFS9pffd3SzSNn5VzKXfBcYlbQ
+#      - --oidc-issuer-url=https://7thsense.auth0.com/
+#      - --cookie-secure=false
+#      - --cookie-secret=secret1234567890
+#      - --cookie-refresh=30m
+#      - --cookie-samesite=none
+#      - --http-address=:8100
+#      - --pass-access-token=false
+#      - --pass-basic-auth=false
+#      - --pass-authorization-header=true
+#      - --skip-auth-preflight=true
+#      - --skip-auth-route="/assets/.*"
+#      - --skip-auth-route=favicon.ico
+#      - --ssl-upstream-insecure-skip-verify=true
+#      - --ping-path=/healthcheck
+#      - --upstream=http://static_site:10100
+
+      - --provider=google
+      - --skip-provider-button=true
+      - --provider-display-name=Google
+      - --email-domain=*
+      - --insecure-oidc-allow-unverified-email=true
+      - --client-id=424578324323-b957ap0ablqq8ag02bpdng2rtnu3k7kq.apps.googleusercontent.com
+      - --client-secret=K1c6V16pp_UF8YO3pcUyTouY
+      - --oidc-issuer-url=https://accounts.google.com
+      - --cookie-secure=false
+      - --cookie-secret=secret1234567890
+      - --cookie-refresh=30m
+      - --cookie-samesite=none
+      - --http-address=:8100
+      - --pass-access-token=false
+      - --pass-basic-auth=false
+      - --pass-authorization-header=true
+      - --redirect-url=http://localhost:8080/oauth2/callback
+      - --skip-auth-preflight=true
+      - --skip-auth-route="/assets/.*"
+      - --skip-auth-route=favicon.ico
+      - --ssl-upstream-insecure-skip-verify=true
+      - --ping-path=/healthcheck
+      - --upstream=http://static_site:10100
     networks:
       - envoymesh
 
