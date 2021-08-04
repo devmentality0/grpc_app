@@ -1,41 +1,41 @@
 version: '3.8'
 services:
-  grpc-app-oauth2-proxy:
-    container_name: grpc-app-oauth2-proxy
-    image: quay.io/oauth2-proxy/oauth2-proxy:v7.0.0
-    depends_on:
-      - envoy_router
-    restart: unless-stopped
-    ports:
-      - 8080:8080
-    entrypoint:
-      - /bin/oauth2-proxy
-    command:
-      - --provider=google
-      - --skip-provider-button=true
-      - --provider-display-name=Google
-      - --email-domain=*
-      - --insecure-oidc-allow-unverified-email=true
-      - --client-id=424578324323-b957ap0ablqq8ag02bpdng2rtnu3k7kq.apps.googleusercontent.com
-      - --client-secret=K1c6V16pp_UF8YO3pcUyTouY
-      - --oidc-issuer-url=https://accounts.google.com
-      - --cookie-secure=false
-      - --cookie-secret=secret1234567890
-      - --cookie-refresh=30m
-      - --cookie-samesite=none
-      - --http-address=:8080
-      - --pass-access-token=false
-      - --pass-basic-auth=false
-      - --pass-authorization-header=true
-      - --redirect-url=http://localhost:8080/oauth2/callback
-      - --skip-auth-preflight=true
-      - --skip-auth-route="/assets/.*"
-      - --skip-auth-route=favicon.ico
-      - --ssl-upstream-insecure-skip-verify=true
-      - --ping-path=/healthcheck
-      - --upstream=http://envoy_router:8090
-    networks:
-      - envoymesh
+#  grpc-app-oauth2-proxy:
+#    container_name: grpc-app-oauth2-proxy
+#    image: quay.io/oauth2-proxy/oauth2-proxy:v7.0.0
+#    depends_on:
+#      - envoy_router
+#    restart: unless-stopped
+#    ports:
+#      - 8080:8080
+#    entrypoint:
+#      - /bin/oauth2-proxy
+#    command:
+#      - --provider=google
+#      - --skip-provider-button=true
+#      - --provider-display-name=Google
+#      - --email-domain=*
+#      - --insecure-oidc-allow-unverified-email=true
+#      - --client-id=424578324323-b957ap0ablqq8ag02bpdng2rtnu3k7kq.apps.googleusercontent.com
+#      - --client-secret=K1c6V16pp_UF8YO3pcUyTouY
+#      - --oidc-issuer-url=https://accounts.google.com
+#      - --cookie-secure=false
+#      - --cookie-secret=secret1234567890
+#      - --cookie-refresh=30m
+#      - --cookie-samesite=none
+#      - --http-address=:8080
+#      - --pass-access-token=false
+#      - --pass-basic-auth=false
+#      - --pass-authorization-header=true
+#      - --redirect-url=http://localhost:8080/oauth2/callback
+#      - --skip-auth-preflight=true
+#      - --skip-auth-route="/assets/.*"
+#      - --skip-auth-route=favicon.ico
+#      - --ssl-upstream-insecure-skip-verify=true
+#      - --ping-path=/healthcheck
+#      - --upstream=http://envoy_router:8090
+#    networks:
+#      - envoymesh
 
   envoy_router:
     build:
@@ -43,6 +43,8 @@ services:
       dockerfile: Dockerfile_router
     container_name: envoy_router
     restart: unless-stopped
+    ports:
+      - 8080:8080
     depends_on:
       - static_site
       - grpc_backend
